@@ -7,9 +7,8 @@ extern crate serde_derive;
 extern crate serde_json;
 
 
-#[derive(Serialize, Deserialize)]
-
 // TODO Try using enums for log level
+#[derive(Serialize, Deserialize)]
 struct LogRecord {
     level: String,
     message: String,
@@ -34,8 +33,8 @@ fn main() -> Result<(), Box<std::error::Error>> {
 
     loop {
         let index = rand::thread_rng().gen_range(0, default_logs.len());
-        // TODO What's tailing `?` here?
-        let log_line = serde_json::to_string(&default_logs[index])?;
+        let log_line = &default_logs[index];
+        let log_line = serde_json::to_string(log_line)?;
         println!("{}", log_line);
 
         // What happens to its ownership...?
