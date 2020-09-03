@@ -14,7 +14,7 @@ struct LogRecord {
     message: String,
 }
 
-fn main() -> Result<(), Box<std::error::Error>> {
+fn main() {
     let default_logs = vec![
         // "foo".to_string() v. String::from("foo") ?
         LogRecord { level: "DEBUG".to_string(), message: "Debugging is hard.".to_string() },
@@ -34,7 +34,12 @@ fn main() -> Result<(), Box<std::error::Error>> {
     loop {
         let index = rand::thread_rng().gen_range(0, default_logs.len());
         let log_line = &default_logs[index];
-        let log_line = serde_json::to_string(log_line)?;
+        let log_line = serde_json::to_string(log_line);
+        let log_line = match log_line {
+            Ok(message) => message,
+            Err(error) => panic!("Failed to deserialize: {:?}", error),
+        };
+        
         println!("{}", log_line);
 
         // What happens to its ownership...?
